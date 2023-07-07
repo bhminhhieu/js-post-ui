@@ -73,3 +73,9 @@ ul {
   height: 40px;
   width: auto;
 }
+.nav .nav_link{
+  text-decoration: none;
+}
+.nav .nav_link:hover{
+  text-decoration: underline;
+}
