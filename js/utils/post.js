@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { truncateText } from './common';
 import { queryElement } from './selector';
-import relativeTime from 'dayjs/plugin/relativeTime';
 
 //Require this to use fromNow() function
 dayjs.extend(relativeTime);
@@ -38,6 +38,13 @@ function createLiElement(post) {
     } catch (error) {
       console.log('Failed to get time', error);
     }
+
+    //go to post detail page
+    liElement.firstElementChild?.addEventListener('click', () => {
+      //both the same
+      // window.location.assign(`/post-detail.html?id=${post.id}`);
+      window.location.href = `/post-detail.html?id=${post.id}`;
+    });
 
     return liElement;
   } catch (error) {
