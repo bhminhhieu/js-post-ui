@@ -15,6 +15,7 @@ function createLiElement(post) {
     if (!postTemplate) return;
     const liElement = postTemplate.content.firstElementChild.cloneNode(true);
     if (!liElement) return;
+    const editPostButton = queryElement(liElement, 'div[data-id="edit"]');
 
     //Update title,description,author,thumbnail and timespan for liElement
     const titleElement = queryElement(liElement, '[data-id="title"]');
@@ -23,10 +24,10 @@ function createLiElement(post) {
     descriptionElement.textContent = truncateText(post.description, 100);
     const authorElement = queryElement(liElement, '[data-id="author"]');
     authorElement.textContent = truncateText(post.author, 100);
-
     const thumbnailElement = queryElement(liElement, '[data-id="thumbnail"]');
     thumbnailElement.src = post.imageUrl;
 
+    //set default image when loading image fail
     thumbnailElement.addEventListener('error', () => {
       thumbnailElement.src = 'https://fakeimg.pl/1378x400?text=thumbnail';
     });
@@ -40,10 +41,22 @@ function createLiElement(post) {
     }
 
     //go to post detail page
-    liElement.firstElementChild?.addEventListener('click', () => {
+    liElement.firstElementChild?.addEventListener('click', (event) => {
+      //if event is triggered from post menu -> ignore
+      const postMenu = queryElement(liElement, 'div[data-id="menu"]');
+      //if we do have postMenu and it contains the element that we already clicked -> do nothing
+      if (postMenu && postMenu.contains(event.target)) return;
+
       //both the same
       // window.location.assign(`/post-detail.html?id=${post.id}`);
       window.location.href = `/post-detail.html?id=${post.id}`;
+    });
+
+    editPostButton.addEventListener('click', (event) => {
+      //prevent event bubbling from parent(Bad for tracking,analytic)
+      //event.stopProbagation()
+
+      window.location.href = `/add-edit-post.html?id=${post.id}`;
     });
 
     return liElement;

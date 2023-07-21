@@ -1,10 +1,15 @@
 export function queryElement(element, queryStr) {
   //create an need-to-create element
-  const NTCElement = element.querySelector(queryStr);
-  if (!NTCElement) {
-    console.log("Oops! Something's wrong");
+  let ntcElement;
+  if (element === document) {
+    ntcElement = document.getElementById(queryStr);
+  } else {
+    ntcElement = element.querySelector(queryStr);
+  }
+  if (!ntcElement) {
+    console.log("Oops! Something's wrong:", queryStr, 'cannot be made');
     return;
   }
 
-  return NTCElement;
+  return ntcElement;
 }

@@ -2,13 +2,13 @@ import dayjs from 'dayjs';
 import postApi from './api/postApi';
 import { queryElement, registerLightBox } from './utils';
 
-function renderPostDetail(data) {
-  if (!data) return;
+function renderPostDetail(post) {
+  if (!post) return;
 
   //render hero image(imageUrl)
   const heroImage = document.getElementById('postHeroImage');
   if (heroImage) {
-    heroImage.style.backgroundImage = `url(${data.imageUrl})`;
+    heroImage.style.backgroundImage = `url(${post.imageUrl})`;
 
     // set default image in case it loads fail
     heroImage.addEventListener('error', () => {
@@ -18,32 +18,32 @@ function renderPostDetail(data) {
 
   //render title
   // const postTitle = document.getElementById('postDetailTitle');
-  const postTitle = queryElement(document, '#postDetailTitle');
-  postTitle.textContent = data.title;
+  const postTitle = queryElement(document, 'postDetailTitle');
+  postTitle.textContent = post.title;
 
   //render author
-  const authorText = queryElement(document, '#postDetailAuthor');
-  authorText.textContent = data.author;
+  const authorText = queryElement(document, 'postDetailAuthor');
+  authorText.textContent = post.author;
 
   //render updated at
-  const timeSpan = queryElement(document, '#postDetailTimeSpan');
-  timeSpan.textContent = dayjs(data.updatedAt).format('DD/MM/YYYY HH:mm');
+  const timeSpan = queryElement(document, 'postDetailTimeSpan');
+  timeSpan.textContent = dayjs(post.updatedAt).format('DD/MM/YYYY HH:mm');
 
   //render description
-  const postDescription = queryElement(document, '#postDetailDescription');
-  postDescription.textContent = data.description;
+  const postDescription = queryElement(document, 'postDetailDescription');
+  postDescription.textContent = post.description;
 
   //render edit page link
-  const editPage = queryElement(document, '#goToEditPageLink');
+  const editPage = queryElement(document, 'goToEditPageLink');
   editPage.addEventListener('click', () => {
-    window.location.href = `/add-edit-post.html?id=${data.id}`;
+    window.location.href = `/add-edit-post.html?id=${post.id}`;
   });
 }
 //Post-detail main
 (async () => {
   try {
     registerLightBox({
-      modalID: '#lightBox',
+      modalID: 'lightBox',
       imgSelector: 'img[data-id="lightBoxImg"]',
       prevSelector: 'button[data-id="lightBoxPrev"]',
       nextSelector: 'button[data-id="lightBoxNext"]',
@@ -55,10 +55,10 @@ function renderPostDetail(data) {
       console.log('Post not found');
       return;
     }
-    const data = await postApi.getByID(postID);
+    const post = await postApi.getByID(postID);
 
-    renderPostDetail(data);
+    renderPostDetail(post);
   } catch (error) {
-    console.log('fetch data failed', error);
+    console.log('fetch post failed', error);
   }
 })();
